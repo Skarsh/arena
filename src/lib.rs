@@ -65,30 +65,48 @@ mod tests {
 
     #[test]
     fn it_works() {
-        const SIZE: MemoryIndex = 100_000_000;
+        let capacity: MemoryIndex = 2 * std::mem::size_of::<Entity>();
 
         unsafe {
-            let layout = Layout::new::<[u8; SIZE]>();
+            let layout = Layout::new::<[u8; 2 * std::mem::size_of::<Entity>()]>();
             let ptr = alloc(layout);
-            let base = slice::from_raw_parts_mut(ptr, SIZE);
-            for i in 0..SIZE {
+            let base = slice::from_raw_parts_mut(ptr, capacity);
+            for i in 0..capacity {
                 base[i] = 0;
             }
 
-            let mut arena = MemoryArena::new(SIZE, base);
+            let mut arena = MemoryArena::new(capacity, base);
             let mut entity = arena
                 .alloc(Entity {
                     ..Default::default()
                 })
                 .unwrap();
-            entity.age = 29;
+
+            entity.health = 0;
+            entity.stamina = 1;
+            entity.mana = 2;
+            entity.speed = 3;
+            entity.age = 4;
+            entity.weight = 5;
+            entity.height = 6;
+            entity.width = 7;
 
             let mut entity2 = arena
                 .alloc(Entity {
                     ..Default::default()
                 })
                 .unwrap();
-            entity2.age = 42;
+
+            entity2.health = 8;
+            entity2.stamina = 9;
+            entity2.mana = 10;
+            entity2.speed = 11;
+            entity2.age = 12;
+            entity2.weight = 13;
+            entity2.height = 14;
+            entity2.width = 15;
+
+            println!("arena: {:?}", arena);
         }
     }
 }
